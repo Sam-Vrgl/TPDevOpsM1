@@ -4,7 +4,6 @@ export interface Task {
   created_at: string;
 }
 
-// Relative base — nginx (prod) and the Vite dev proxy both route /api to the backend.
 const BASE = "/api/tasks";
 
 export async function fetchTasks(): Promise<Task[]> {

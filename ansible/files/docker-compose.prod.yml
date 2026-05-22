@@ -1,6 +1,3 @@
-# Production compose: pulls pre-built images from GHCR instead of building locally.
-# GHCR_OWNER / IMAGE_TAG are injected by the Ansible playbook (or your shell env).
-
 services:
   backend:
     image: ghcr.io/${GHCR_OWNER}-backend:${IMAGE_TAG:-latest}

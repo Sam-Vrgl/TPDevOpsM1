@@ -25,17 +25,14 @@ const server = Bun.serve({
     const { pathname } = url;
     const method = req.method;
 
-    // CORS pre-flight
     if (method === "OPTIONS") {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
     }
 
-    // Liveness probe used by Docker healthcheck + Prometheus blackbox-style scrape.
     if (pathname === "/health") {
       return json({ status: "ok" });
     }
 
-    // Minimal Prometheus text exposition format.
     if (pathname === "/metrics" && method === "GET") {
       const uptimeSeconds = (Date.now() - startedAt) / 1000;
       const taskCount = listTasks().length;
@@ -55,7 +52,6 @@ const server = Bun.serve({
       });
     }
 
-    // ---- Task CRUD ----
     if (pathname === "/api/tasks" && method === "GET") {
       return json(listTasks());
     }

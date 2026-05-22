@@ -1,12 +1,4 @@
 ---
-# Configures an Ubuntu/Debian VPS to run the DevOps Task Tracker:
-# installs Docker + Compose plugin, opens the firewall, ships the production
-# compose file + monitoring config, logs in to GHCR, and brings the stack up.
-#
-# Usage:
-#   ansible-playbook -i inventory.ini playbook.yml \
-#     -e "ghcr_owner=your-user/tpdevopsm1 ghcr_user=your-user ghcr_token=ghp_xxx"
-
 - name: Deploy DevOps Task Tracker
   hosts: web
   become: true
@@ -14,7 +6,6 @@
   vars:
     app_dir: /opt/devops-task-tracker
     image_tag: latest
-    # Override these on the command line (-e) or in a vault file.
     ghcr_owner: "your-user/tpdevopsm1"
     ghcr_user: ""
     ghcr_token: ""
@@ -64,10 +55,10 @@
         port: "{{ item }}"
         proto: tcp
       loop:
-        - "22"    # SSH
-        - "8080"  # frontend
-        - "3001"  # grafana
-        - "9090"  # prometheus
+        - "22"
+        - "8080"
+        - "3001"
+        - "9090"
 
     - name: Enable UFW
       community.general.ufw:

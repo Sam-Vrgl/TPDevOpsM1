@@ -1,12 +1,3 @@
-# Local full-stack + observability stack.
-# Run:  docker compose up --build -d
-#
-# Frontend  -> http://localhost:8080
-# Backend   -> http://localhost:3000 (also reached via the frontend's /api proxy)
-# Prometheus-> http://localhost:9090
-# Grafana   -> http://localhost:3001  (admin / admin)
-# cAdvisor  -> http://localhost:8081
-
 services:
   backend:
     build: ./backend

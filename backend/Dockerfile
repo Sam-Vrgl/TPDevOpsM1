@@ -1,18 +1,13 @@
-# Bun has a dedicated official image — use it directly for the backend.
 FROM oven/bun:1
 
 WORKDIR /app
 
-# Install dependencies first to leverage Docker layer caching.
-# (No lockfile is committed for this minimal app, so we don't use --frozen-lockfile.)
 COPY package.json ./
 RUN bun install --production
 
-# Copy application source.
 COPY tsconfig.json ./
 COPY src ./src
 
-# SQLite data directory (also mounted as a volume in docker-compose for persistence).
 RUN mkdir -p /app/data
 ENV DB_PATH=/app/data/tasks.sqlite
 ENV PORT=3000

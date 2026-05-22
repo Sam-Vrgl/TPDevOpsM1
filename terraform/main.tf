@@ -1,9 +1,3 @@
-# The VPS already exists (bare SSH box), so Terraform does not *provision* a VM.
-# Instead it drives the remote Docker daemon over SSH: it ensures Docker is
-# present, then declares the application's network + containers as managed state.
-#
-# This keeps container deployment reproducible and idempotent via `terraform apply`.
-
 provider "docker" {
   host = "ssh://${var.vps_user}@${var.vps_host}"
   ssh_opts = [
@@ -17,8 +11,6 @@ locals {
   frontend_image = "ghcr.io/${var.github_owner}-frontend:${var.image_tag}"
 }
 
-# Make sure Docker is installed on the box before the provider needs it.
-# (For a fuller bootstrap — firewall, monitoring stack — use the Ansible playbook.)
 resource "null_resource" "ensure_docker" {
   connection {
     type        = "ssh"

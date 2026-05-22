@@ -10,12 +10,10 @@ export interface Task {
 
 const DB_PATH = process.env.DB_PATH ?? "./data/tasks.sqlite";
 
-// Ensure the directory for the SQLite file exists (e.g. ./data in the container).
 mkdirSync(dirname(DB_PATH), { recursive: true });
 
 export const db = new Database(DB_PATH, { create: true });
 
-// WAL improves concurrent read/write performance for a small API like this.
 db.exec("PRAGMA journal_mode = WAL;");
 
 db.run(`

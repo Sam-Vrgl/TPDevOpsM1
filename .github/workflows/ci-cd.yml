@@ -12,9 +12,6 @@ env:
   IMAGE_FRONTEND: ghcr.io/${{ github.repository }}-frontend
 
 jobs:
-  # ---------------------------------------------------------------------------
-  # CI: install deps, run tests, type-check / build. Runs on every push & PR.
-  # ---------------------------------------------------------------------------
   build-test:
     runs-on: ubuntu-latest
     steps:
@@ -37,9 +34,6 @@ jobs:
           bun install
           bun run build
 
-  # ---------------------------------------------------------------------------
-  # CD: build the Docker images and push them to GHCR. Only on push to main.
-  # ---------------------------------------------------------------------------
   build-push:
     needs: build-test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -82,17 +76,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ---------------------------------------------------------------------------
-  # Deploy: SSH to the VPS and pull the freshly pushed images.
-  # Opt-in: skipped automatically unless the VPS_HOST secret is configured,
-  # so the pipeline stays green for graders without infrastructure access.
-  # ---------------------------------------------------------------------------
   deploy:
     needs: build-push
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
-      # Secrets can't be referenced in `if:` directly, so surface a flag via env.
       VPS_HOST: ${{ secrets.VPS_HOST }}
     steps:
       - name: Deploy over SSH
