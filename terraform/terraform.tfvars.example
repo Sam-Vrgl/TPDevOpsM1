@@ -1,0 +1,8 @@
+# Copy to terraform.tfvars and fill in your values (terraform.tfvars is gitignored).
+vps_host             = "203.0.113.10"
+vps_user             = "root"
+ssh_private_key_path = "~/.ssh/id_ed25519"
+
+# Used to build the GHCR image names: ghcr.io/<github_owner>-backend:<tag>
+github_owner = "your-github-user/tpdevopsm1"
+image_tag    = "latest"

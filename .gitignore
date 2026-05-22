@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+bun.lockb
+
+# Build output
+dist/
+frontend/dist/
+
+# SQLite data
+data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/.terraform.lock.hcl
+terraform.tfvars
+*/terraform.tfvars
+
+# Ansible
+ansible/inventory.ini
+
+# Env / secrets
+.env
+*.pem
+
+# OS / editor
+.DS_Store
+*.log
+.vscode/
+.idea/

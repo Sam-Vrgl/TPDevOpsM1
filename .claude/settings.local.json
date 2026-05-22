@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun --version)",
+      "Bash(docker --version)",
+      "Bash(terraform --version)",
+      "Bash(bun install *)",
+      "Bash(bun test *)",
+      "Bash(bun run *)",
+      "Bash(docker build *)",
+      "Bash(docker compose *)",
+      "Bash(docker pull *)",
+      "Bash(break)",
+      "Bash(curl -s http://localhost:3000/health)",
+      "Bash(curl -s -X POST http://localhost:3000/api/tasks -H \"Content-Type: application/json\" -d '{\"title\":\"verify the stack\"}')",
+      "Bash(curl -s http://localhost:3000/api/tasks)",
+      "Bash(curl -s http://localhost:3000/metrics)",
+      "Bash(curl -s http://localhost:8080/)",
+      "Bash(curl -s -X POST http://localhost:8080/api/tasks -H \"Content-Type: application/json\" -d '{\"title\":\"verify the stack\"}')",
+      "Bash(curl -s http://localhost:8080/api/tasks)",
+      "Bash(curl -s \"http://localhost:9090/api/v1/targets?state=active\")",
+      "Bash(bun -e 'const d=await Bun.stdin.json\\(\\); for\\(const t of d.data.activeTargets\\){console.log\\(t.labels.job.padEnd\\(16\\), t.health, t.lastError||\"\"\\)}')",
+      "Bash(bun -e 'const h=await Bun.stdin.json\\(\\); console.log\\(\"status:\",h.Status\\); for\\(const l of h.Log.slice\\(-2\\)\\) console.log\\(\"exit\",l.ExitCode, JSON.stringify\\(l.Output\\)\\)')",
+      "Bash(docker exec *)",
+      "Bash(curl -s http://localhost:9100/metrics)",
+      "Bash(curl -s \"http://localhost:9090/api/v1/query?query=100%20-%20\\(avg\\(rate\\(node_cpu_seconds_total%7Bmode%3D%22idle%22%7D%5B1m%5D\\)\\)%20*%20100\\)\")",
+      "Bash(bun -e 'const d=await Bun.stdin.json\\(\\); console.log\\(\"result:\", JSON.stringify\\(d.data.result\\)\\)')",
+      "Bash(curl -s \"http://localhost:9090/api/v1/query?query=sum\\(container_memory_usage_bytes%7Bname%3D~%22tt-.%2B%22%7D\\)%20by%20\\(name\\)\")",
+      "Bash(bun -e 'const d=await Bun.stdin.json\\(\\); for\\(const r of d.data.result\\) console.log\\(r.metric.name, r.value[1]\\)')"
+    ]
+  }
+}

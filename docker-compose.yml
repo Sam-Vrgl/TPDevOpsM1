@@ -1,0 +1,106 @@
+# Local full-stack + observability stack.
+# Run:  docker compose up --build -d
+#
+# Frontend  -> http://localhost:8080
+# Backend   -> http://localhost:3000 (also reached via the frontend's /api proxy)
+# Prometheus-> http://localhost:9090
+# Grafana   -> http://localhost:3001  (admin / admin)
+# cAdvisor  -> http://localhost:8081
+
+services:
+  backend:
+    build: ./backend
+    image: tpdevopsm1-backend:local
+    container_name: tt-backend
+    environment:
+      - PORT=3000
+      - DB_PATH=/app/data/tasks.sqlite
+    volumes:
+      - backend-data:/app/data
+    networks:
+      - appnet
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    image: tpdevopsm1-frontend:local
+    container_name: tt-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - appnet
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: tt-prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+    networks:
+      - appnet
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: tt-grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - appnet
+    restart: unless-stopped
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: tt-node-exporter
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    ports:
+      - "9100:9100"
+    networks:
+      - appnet
+    restart: unless-stopped
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: tt-cadvisor
+    privileged: true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - "8081:8080"
+    networks:
+      - appnet
+    restart: unless-stopped
+
+volumes:
+  backend-data:
+  grafana-data:
+
+networks:
+  appnet:
+    driver: bridge
